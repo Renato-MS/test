@@ -1,13 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.fiveware</groupId>
-	<artifactId>fiveware-test</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>Test Parent</name>
-
-	<properties>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.fiveware</groupId>
+    <artifactId>fiveware-test</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>fiveware-test-web</artifactId>
+  <packaging>war</packaging>
+  
+  <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<javax.inject.version>1</javax.inject.version>
@@ -94,14 +95,7 @@
 			<version>${javax.inject.version}</version>
 		</dependency>
 		
-		<!-- JUNIT -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-		</dependency>
-
-		<!-- JAVAX INJECT -->
+	     <!-- JAVAX INJECT -->
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
@@ -196,31 +190,36 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<!-- Delete folder LIB with the execution of install. -->
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<delete>
+									<fileset
+										dir="${basedir}/target/${project.build.finalName}/WEB-INF/lib">
+										<exclude name="lib" />
+									</fileset>
+								</delete>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
 		<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.1.0.M0</version>
-
-				<configuration>
-					<scanIntervalSeconds>1</scanIntervalSeconds>
-					<webApp>
-						<contextPath>/</contextPath>
-					</webApp>
-					
-					<scanTargetPatterns>
-						<scanTargetPattern>
-							<directory>${basedir}/target/${project.build.finalName}</directory>
-							<includes>
-								<include>**/*.properties</include>
-								<include>**/*.xml</include>
-								<include>**/*.html</include>
-								<include>**/*.xhtml</include>
-								<include>**/*.jsp</include>
-							</includes>
-						</scanTargetPattern>
-					</scanTargetPatterns>
-				</configuration>
+				
 			</plugin>
 		</plugins>
 
@@ -234,10 +233,6 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-	</build>
-
-  <modules>
-    <module>fiveware-test-service</module>
-    <module>fiveware-test-web</module>
-  </modules>
+	</build> 
+  	
 </project>
